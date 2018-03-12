@@ -1,0 +1,9 @@
+{
+  "name": "UserType",
+  "namespace": "com.azimo.kafka.avro.writer",
+  "type": "enum",
+  "symbols": [
+    "ADMIN",
+    "REGULAR"
+  ]
+}

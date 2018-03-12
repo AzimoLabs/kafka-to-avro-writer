@@ -1,0 +1,13 @@
+[
+  {
+    "name": "UserDetails",
+    "namespace": "com.azimo.kafka.avro.writer",
+    "type": "record",
+    "fields": [
+      {
+        "name": "detailsId",
+        "type": ["null", "string"]
+      }
+    ]
+  }
+]
