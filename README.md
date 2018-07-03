@@ -1,5 +1,5 @@
 # Kafka to Avro Writer
-Kafka to Avro Writer based on Apache Beam. It reads data from multiple kafka topics and stores it on google cloud storage in Avro fromat.   
+Kafka to Avro Writer based on Apache Beam. It reads data from multiple kafka topics and stores it on google cloud storage in Avro format.   
 Natively Apache beam requires to provide Avro schema to work with GenericRecords.  
 This solution uses custom Beam coder to allow dynamic serialization and deserialization of Avro GenericRecords with the use of Confluent Schema Registry. 
 Thanks to this adding more topics with different types of data is just a matter of configuration.
