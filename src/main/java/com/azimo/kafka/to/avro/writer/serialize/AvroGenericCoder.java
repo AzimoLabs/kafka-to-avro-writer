@@ -25,8 +25,9 @@ public class AvroGenericCoder extends CustomCoder<AvroGenericRecord> {
 
     private BeamKafkaAvroGenericDeserializer getDeserializer() {
         if (deserializer == null) {
-            deserializer = new BeamKafkaAvroGenericDeserializer();
-            deserializer.configure(createRegistryUrlMap(), false);
+            BeamKafkaAvroGenericDeserializer d = new BeamKafkaAvroGenericDeserializer();
+            d.configure(createRegistryUrlMap(), false);
+            deserializer = d;
         }
         return deserializer;
     }
