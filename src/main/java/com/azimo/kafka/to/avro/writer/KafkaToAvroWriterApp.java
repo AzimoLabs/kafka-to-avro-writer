@@ -29,7 +29,6 @@ public class KafkaToAvroWriterApp {
                 .schemaRegistryUrl(options.getSchemaRegistryUrl())
                 .offsetReset(options.getOffsetReset())
                 .consumerGroupId(options.getConsumerGroupId())
-                .isEnableAutoCommit(options.isEnableAutoCommit())
                 .build();
 
                 PCollection<AvroGenericRecord> records = p.apply(readKafkaTr)

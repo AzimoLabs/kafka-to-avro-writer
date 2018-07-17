@@ -45,10 +45,4 @@ public interface KafkaToAvroWriterPipelineOptions extends DataflowPipelineOption
 	@Description("Kafka - a unique string that identifies the consumer group this consumer belongs to")
 	String getConsumerGroupId();
 	void setConsumerGroupId(String value);
-
-	@Description("Kafka - if set to true offsets are committed automatically with a frequency controlled by the config auto.commit.interval.ms (default 5000).")
-	@Default.Boolean(true)
-	boolean isEnableAutoCommit();
-	void setEnableAutoCommit(boolean value);
-
 }

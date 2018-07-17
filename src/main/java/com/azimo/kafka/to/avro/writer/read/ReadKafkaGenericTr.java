@@ -27,7 +27,6 @@ public class ReadKafkaGenericTr extends PTransform<PBegin, PCollection<AvroGener
 	private String offsetReset;
 	private String consumerGroupId;
 	private long maxNumRecords;
-	private boolean isEnableAutoCommit;
 
 	private ReadKafkaGenericTr(Builder builder) {
 		this.inputTopics = builder.inputTopics;
@@ -36,7 +35,6 @@ public class ReadKafkaGenericTr extends PTransform<PBegin, PCollection<AvroGener
 		this.offsetReset = builder.offsetReset;
 		this.consumerGroupId = builder.consumerGroupId;
 		this.maxNumRecords = builder.maxNumRecords;
-		this.isEnableAutoCommit = builder.isEnableAutoCommit;
 	}
 
     public static Builder newReadKafkaGenericTrBuilder() {
@@ -60,6 +58,7 @@ public class ReadKafkaGenericTr extends PTransform<PBegin, PCollection<AvroGener
 				.withKeyDeserializer(StringDeserializer.class)
 				.withValueDeserializerAndCoder(BeamKafkaAvroGenericDeserializer.class, AvroGenericCoder.of(schemaRegistryUrl))
 				.withMaxNumRecords(maxNumRecords)
+				.commitOffsetsInFinalize()
 				.withoutMetadata();
 	}
 
@@ -68,7 +67,6 @@ public class ReadKafkaGenericTr extends PTransform<PBegin, PCollection<AvroGener
 		configUpdates.put(KafkaAvroDeserializerConfig.SCHEMA_REGISTRY_URL_CONFIG, schemaRegistryUrl);
 		configUpdates.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, offsetReset);
 		configUpdates.put(ConsumerConfig.GROUP_ID_CONFIG, consumerGroupId);
-		configUpdates.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, isEnableAutoCommit);
 		return configUpdates;
 	}
 
@@ -79,7 +77,6 @@ public class ReadKafkaGenericTr extends PTransform<PBegin, PCollection<AvroGener
 		private String offsetReset;
 		private String consumerGroupId;
 		private long maxNumRecords = Long.MAX_VALUE;
-        private boolean isEnableAutoCommit;
 
         private Builder() {
 		}
@@ -115,11 +112,6 @@ public class ReadKafkaGenericTr extends PTransform<PBegin, PCollection<AvroGener
 
 		public Builder maxNumRecords(long maxNumRecords) {
 			this.maxNumRecords = maxNumRecords;
-			return this;
-		}
-
-		public Builder isEnableAutoCommit(boolean isEnableAutoCommit) {
-			this.isEnableAutoCommit = isEnableAutoCommit;
 			return this;
 		}
 	}
