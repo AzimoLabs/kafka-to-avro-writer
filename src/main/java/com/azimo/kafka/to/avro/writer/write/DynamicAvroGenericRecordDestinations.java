@@ -48,7 +48,7 @@ public class DynamicAvroGenericRecordDestinations extends DynamicAvroDestination
 
     @Override
     public AvroDestination getDefaultDestination() {
-        throw new RuntimeException("Default destination not supported");
+        return new AvroDestination();
     }
 
     @Override

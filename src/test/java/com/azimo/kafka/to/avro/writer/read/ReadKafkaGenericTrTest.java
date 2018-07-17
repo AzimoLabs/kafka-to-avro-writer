@@ -5,11 +5,11 @@ import com.azimo.kafka.to.avro.writer.serialize.AvroGenericRecord;
 import com.azimo.kafka.to.avro.writer.util.SchemaRegistryMockUtil;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import com.google.common.collect.Lists;
 import io.confluent.kafka.schemaregistry.client.MockSchemaRegistryClient;
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.beam.sdk.Pipeline;
-import org.apache.beam.sdk.repackaged.com.google.common.collect.Lists;
 import org.apache.beam.sdk.testing.PAssert;
 import org.apache.beam.sdk.testing.TestPipeline;
 import org.apache.beam.sdk.values.PCollection;
@@ -82,7 +82,6 @@ public class ReadKafkaGenericTrTest {
 				.schemaRegistryUrl(schemaRegistryUrl)
 				.offsetReset("earliest")
 				.consumerGroupId("testgroup")
-				.isEnableAutoCommit(false)
 				.maxNumRecords(expectedOutput.size())
 				.build();
 	}
