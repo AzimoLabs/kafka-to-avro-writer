@@ -39,7 +39,6 @@ java -jar build/libs/kafka-to-avro-writer-*.jar --runner=DataflowRunner \
                    --tempLocation=gs://gcp_bucket/temp/avro-writer \
                    --stagingLocation=gs://gcp_bucket/stream/staging/avro-writer \
                    --windowInMinutes=60 \
-                   --enableAutoCommit=true \
                    --zone=europe-west1-b \
                    --network=gcp_network \
                    --subnetwork=gcp_subnetwork \
@@ -52,7 +51,6 @@ java -jar build/libs/kafka-to-avro-writer-*.jar --runner=DataflowRunner \
 * jobName - Dataflow job name
 * consumerGroupId - kafka consumer group id
 * offsetReset - kafka offset reset property
-* enableAutoCommit - kafka auto commit configuration
 * numberOfShards - defines how many files per window duration will be created for one type of data (one topic)
 * tempLocation - temp directory for Dataflow job on google cloud storage
 * stagingLocation - staging directory for Dataflow job on google cloud storage 
