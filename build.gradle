@@ -3,7 +3,7 @@ ext {
     guavaVersion = '22.0'
     logstashVersion = '4.11'
     logbackVersion = '1.2.3'
-    beamVersion = '2.5.0'
+    beamVersion = '2.19.0'
     commonsLangVersion = '3.5'
     confluentVersion = '3.2.1'
     kafkaVersion = '1.0.1'

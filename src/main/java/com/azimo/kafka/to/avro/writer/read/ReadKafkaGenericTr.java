@@ -53,7 +53,7 @@ public class ReadKafkaGenericTr extends PTransform<PBegin, PCollection<AvroGener
 	private PTransform<PBegin, PCollection<KV<String, AvroGenericRecord>>> createKafkaRead(Map<String, Object> configUpdates) {
 		return KafkaIO.<String, AvroGenericRecord>read()
 				.withBootstrapServers(bootstrapServers)
-				.updateConsumerProperties(configUpdates)
+				.withConsumerConfigUpdates(configUpdates)
 				.withTopics(inputTopics)
 				.withKeyDeserializer(StringDeserializer.class)
 				.withValueDeserializerAndCoder(BeamKafkaAvroGenericDeserializer.class, AvroGenericCoder.of(schemaRegistryUrl))
