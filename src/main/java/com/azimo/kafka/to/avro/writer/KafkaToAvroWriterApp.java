@@ -33,10 +33,10 @@ public class KafkaToAvroWriterApp {
 
                 PCollection<AvroGenericRecord> records = p.apply(readKafkaTr)
                 .apply(Window.<AvroGenericRecord>into(FixedWindows.of(Duration.standardMinutes(options.getWindowInMinutes())))
-                        .triggering(AfterWatermark.pastEndOfWindow()
+                        .triggering(Repeatedly.forever(AfterWatermark.pastEndOfWindow()
                                 .withEarlyFirings(AfterProcessingTime.pastFirstElementInPane()
                                         .plusDelayOf(Duration.standardMinutes(options.getWindowInMinutes())))
-                                .withLateFirings(AfterPane.elementCountAtLeast(1)))
+                                .withLateFirings(AfterPane.elementCountAtLeast(1))))
                         .withAllowedLateness(Duration.standardDays(2))
                         .discardingFiredPanes()
                     ).setCoder(AvroGenericCoder.of(options.getSchemaRegistryUrl()));
