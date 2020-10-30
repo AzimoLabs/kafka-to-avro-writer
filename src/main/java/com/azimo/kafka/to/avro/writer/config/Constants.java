@@ -6,6 +6,7 @@ public interface Constants {
 	String APP_NAME = "Kafka to Avro Writer";
     String FILE_EXTENSION = ".avro";
     String DATE_SUBDIR_FORMAT = "yyyy-MM-dd";
+    String DATE_SUBDIR_PREFIX = "dt=";
 
     String AVRO_FILE_NAME_PREFIX = "/events";
 }

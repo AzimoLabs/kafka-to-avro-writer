@@ -37,11 +37,11 @@ public class KafkaToAvroWriterApp {
                                 .withEarlyFirings(AfterProcessingTime.pastFirstElementInPane()
                                         .plusDelayOf(Duration.standardMinutes(options.getWindowInMinutes())))
                                 .withLateFirings(AfterPane.elementCountAtLeast(1))))
-                        .withAllowedLateness(Duration.standardDays(2))
+                        .withAllowedLateness(Duration.standardHours(1))
                         .discardingFiredPanes()
                     ).setCoder(AvroGenericCoder.of(options.getSchemaRegistryUrl()));
 
-        records.apply(new WriteAvroFilesTr(options.getBasePath(), options.getNumberOfShards()));
+        records.apply(new WriteAvroFilesTr(options.getBasePath(), options.getTempLocation(), options.getNumberOfShards()));
 
         p.run();
     }

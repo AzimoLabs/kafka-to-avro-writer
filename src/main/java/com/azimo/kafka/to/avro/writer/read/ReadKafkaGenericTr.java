@@ -58,6 +58,7 @@ public class ReadKafkaGenericTr extends PTransform<PBegin, PCollection<AvroGener
 				.withKeyDeserializer(StringDeserializer.class)
 				.withValueDeserializerAndCoder(BeamKafkaAvroGenericDeserializer.class, AvroGenericCoder.of(schemaRegistryUrl))
 				.withMaxNumRecords(maxNumRecords)
+				.withProcessingTime()
 				.commitOffsetsInFinalize()
 				.withoutMetadata();
 	}

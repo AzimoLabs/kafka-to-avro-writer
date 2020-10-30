@@ -53,7 +53,7 @@ public class WriteAvroFilesTrTest {
 
         //when
         write.apply(Create.of(expectedRecords).withCoder(AvroGenericCoder.of(schemaRegistryUrl)))
-            .apply(new WriteAvroFilesTr(INPUT_DIR.toAbsolutePath().toString(), 1));
+            .apply(new WriteAvroFilesTr(INPUT_DIR.toAbsolutePath().toString(), INPUT_DIR.toAbsolutePath().toString() + "/temp", 1));
         write.run().waitUntilFinish();
 
         //then
