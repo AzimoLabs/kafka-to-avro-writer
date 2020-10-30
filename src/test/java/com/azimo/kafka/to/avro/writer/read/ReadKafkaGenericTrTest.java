@@ -1,5 +1,6 @@
 package com.azimo.kafka.to.avro.writer.read;
 
+import com.azimo.kafka.avro.writer.User;
 import com.azimo.kafka.to.avro.writer.generator.UserGenerator;
 import com.azimo.kafka.to.avro.writer.serialize.AvroGenericRecord;
 import com.azimo.kafka.to.avro.writer.util.SchemaRegistryMockUtil;
@@ -20,37 +21,38 @@ import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
-import org.springframework.kafka.test.rule.KafkaEmbedded;
+import org.springframework.kafka.test.rule.EmbeddedKafkaRule;
 import org.springframework.kafka.test.utils.KafkaTestUtils;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 public class ReadKafkaGenericTrTest {
 	private static final String TOPIC_USER = "user";
 
-    @Rule
+	@Rule
 	public WireMockRule wireMockRule = new WireMockRule(WireMockConfiguration.options().port(SchemaRegistryMockUtil.PORT_NUMBER));
 	private String schemaRegistryUrl;
 
 	@ClassRule
-	public static KafkaEmbedded embeddedKafka = new KafkaEmbedded(1, false, 1, TOPIC_USER);
+	public static EmbeddedKafkaRule embeddedKafkaRule = new EmbeddedKafkaRule(1, false, 1, TOPIC_USER);
 
 	private KafkaProducer<String, Object> producer;
 
 	@Before
-	public void before() throws IOException {
-		Map<String, Object> props = KafkaTestUtils.senderProps(getBrokers());
-		KafkaAvroSerializer valueSerializer = new KafkaAvroSerializer(new MockSchemaRegistryClient());
+	public void before() throws Exception {
+		Map<String, Object> props = KafkaTestUtils.producerProps(getBrokers());
+		MockSchemaRegistryClient client = new MockSchemaRegistryClient();
+		client.register(TOPIC_USER + "-value", User.SCHEMA$);
+		KafkaAvroSerializer valueSerializer = new KafkaAvroSerializer(client);
 		StringSerializer keySerializer = new StringSerializer();
 		producer = new KafkaProducer<>(props, keySerializer, valueSerializer);
-        SchemaRegistryMockUtil.mockSchema();
-        schemaRegistryUrl = wireMockRule.url("/");
+		SchemaRegistryMockUtil.mockSchema();
+		schemaRegistryUrl = wireMockRule.url("/");
 	}
 
 	private String getBrokers() {
-		return embeddedKafka.getBrokersAsString();
+		return embeddedKafkaRule.getEmbeddedKafka().getBrokersAsString();
 	}
 
 	@Test
@@ -60,19 +62,19 @@ public class ReadKafkaGenericTrTest {
 
 
 		GenericRecord expectedRecord = UserGenerator.createUserGenericRecord();
-        List<AvroGenericRecord> expectedOutput = com.google.common.collect.Lists.newArrayList(AvroGenericRecord.of(SchemaRegistryMockUtil.SCHEMA_ID, expectedRecord));
+		List<AvroGenericRecord> expectedOutput = Lists.newArrayList(AvroGenericRecord.of(SchemaRegistryMockUtil.SCHEMA_ID, expectedRecord));
 
 		producer.send(new ProducerRecord<>(TOPIC_USER, UserGenerator.createUserSpecificRecord()));
 
 		//when
-        PCollection<AvroGenericRecord> output = p
-                .apply(createReadTr(expectedOutput));
+		PCollection<AvroGenericRecord> output = p
+				.apply(createReadTr(expectedOutput));
 
 
 
 		//then
 		PAssert.that(output).containsInAnyOrder(expectedOutput);
-        p.run().waitUntilFinish();
+		p.run().waitUntilFinish();
 	}
 
 	private ReadKafkaGenericTr createReadTr(List<AvroGenericRecord> expectedOutput) {
